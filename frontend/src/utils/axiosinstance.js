@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
   },
 });
 
-//Request interceptor to add token to headers
+// Request interceptor to add token to headers
 axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("token");
@@ -24,22 +24,25 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-//Response interceptor to handle errors
+// Response interceptor to handle errors
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
-    //Handle common error globally
     if (error.response) {
       if (error.response.status === 401) {
-        //Redirect to login page
-        window.location.href = "/login";
+        // Prevent redirect loop
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
       } else if (error.response.status === 500) {
-        console.error("Server error. Please try aagain later.");
+        console.error("Server error. Please try again later.");
       }
     } else if (error.code === "ECONNABORTED") {
       console.error("Request timeout. Please try again.");
+    } else if (!error.response) {
+      console.error("Network error. Please check your connection or backend server.");
     }
     return Promise.reject(error);
   }
