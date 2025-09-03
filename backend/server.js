@@ -12,7 +12,8 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "*",
+    origin: 'https://expense-tracker-gilt-six-89.vercel.app', // your Vercel frontend URL
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
